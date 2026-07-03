@@ -21,30 +21,20 @@ jobs:
         
     - name: Build Debug APK
       run: |
-        mkdir -p build-logs
-        ./gradlew assembleDebug --stacktrace --info 2>&1 | tee build-logs/gradle-build.log || true
-        echo "=== Build completed ==="
-      continue-on-error: true
+        ./gradlew assembleDebug 2>&1 | tee /tmp/gradle.log || true
+        if [ -f app/build/outputs/apk/debug/app-debug.apk ]; then
+          echo "APK built successfully"
+        else
+          echo "::notice::APK not found"
+          echo "::notice::Gradle log tail:"
+          tail -100 /tmp/gradle.log | while read line; do echo "::notice::$line"; done
+        fi
+        echo "::notice::Listing APK files:"
+        find app/build -name "*.apk" | while read line; do echo "::notice::$line"; done
       
-    - name: List outputs
-      run: |
-        echo "=== APK files ==="
-        find app/build -name "*.apk" -type f 2>/dev/null || true
-        echo "=== Output directory ==="
-        ls -la app/build/outputs/apk/ 2>/dev/null || true
-        echo "=== Build logs ==="
-        ls -la build-logs/ 2>/dev/null || true
-        
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
         if-no-files-found: warn
-        
-    - name: Upload build logs
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: build-logs
-        path: build-logs/
