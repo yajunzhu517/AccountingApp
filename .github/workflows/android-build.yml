@@ -19,22 +19,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         
+    - name: Make gradlew executable
+      run: chmod +x gradlew
+      
     - name: Build Debug APK
-      run: |
-        ./gradlew assembleDebug 2>&1 | tee /tmp/gradle.log || true
-        if [ -f app/build/outputs/apk/debug/app-debug.apk ]; then
-          echo "APK built successfully"
-        else
-          echo "::notice::APK not found"
-          echo "::notice::Gradle log tail:"
-          tail -100 /tmp/gradle.log | while read line; do echo "::notice::$line"; done
-        fi
-        echo "::notice::Listing APK files:"
-        find app/build -name "*.apk" | while read line; do echo "::notice::$line"; done
+      run: ./gradlew assembleDebug
       
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
-        if-no-files-found: warn
+        if-no-files-found: error
