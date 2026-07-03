@@ -1,1 +1,34 @@
-cGFja2FnZSBjb20uZXhhbXBsZS5hY2NvdW50aW5nYXBwLmRhdGEuZW50aXRpZXMKCmltcG9ydCBhbmRyb2lkeC5yb29tLkVudGl0eQppbXBvcnQgYW5kcm9pZHgucm9vbS5Gb3JlaWduS2V5CmltcG9ydCBhbmRyb2lkeC5yb29tLkluZGV4CmltcG9ydCBhbmRyb2lkeC5yb29tLlByaW1hcnlLZXkKCkBFbnRpdHkoCiAgICB0YWJsZU5hbWUgPSAidHJhbnNhY3Rpb25zIiwKICAgIGZvcmVpZ25LZXlzID0gWwogICAgICAgIEZvcmVpZ25LZXkoCiAgICAgICAgICAgIGVudGl0eSA9IENhdGVnb3J5OjpjbGFzcywKICAgICAgICAgICAgcGFyZW50Q29sdW1ucyA9IFsiaWQiXSwKICAgICAgICAgICAgY2hpbGRDb2x1bW5zID0gWyJjYXRlZ29yeUlkIl0sCiAgICAgICAgICAgIG9uRGVsZXRlID0gRm9yZWlnbktleS5TRVRfTlVMTAogICAgICAgICkKICAgIF0sCiAgICBpbmRpY2VzID0gWwogICAgICAgIEluZGV4KHZhbHVlID0gWyJkYXRlIl0pLAogICAgICAgIEluZGV4KHZhbHVlID0gWyJjYXRlZ29yeUlkIl0pLAogICAgICAgIEluZGV4KHZhbHVlID0gWyJ0eXBlIl0pCiAgICBdCikKZGF0YSBjbGFzcyBUcmFuc2FjdGlvbigKICAgIEBQcmltYXJ5S2V5KGF1dG9HZW5lcmF0ZSA9IHRydWUpCiAgICB2YWwgaWQ6IExvbmcgPSAwLAogICAgdmFsIGFtb3VudDogRG91YmxlLAogICAgdmFsIHR5cGU6IFN0cmluZywgLy8gImluY29tZSIgb3IgImV4cGVuc2UiCiAgICB2YWwgY2F0ZWdvcnlJZDogTG9uZz8sCiAgICB2YWwgYWNjb3VudE5hbWU6IFN0cmluZyA9ICLpu5jorqTotKbmiLciLAogICAgdmFsIGRhdGU6IExvbmcsIC8vIHRpbWVzdGFtcCBpbiBtaWxsaXMKICAgIHZhbCBub3RlOiBTdHJpbmcgPSAiIiwKICAgIHZhbCBjcmVhdGVkQXQ6IExvbmcgPSBTeXN0ZW0uY3VycmVudFRpbWVNaWxsaXMoKQopCg==
+package com.example.accountingapp.data.entities
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+
+@Entity(
+    tableName = "transactions",
+    foreignKeys = [
+        ForeignKey(
+            entity = Category::class,
+            parentColumns = ["id"],
+            childColumns = ["categoryId"],
+            onDelete = ForeignKey.SET_NULL
+        )
+    ],
+    indices = [
+        Index(value = ["date"]),
+        Index(value = ["categoryId"]),
+        Index(value = ["type"])
+    ]
+)
+data class Transaction(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+    val amount: Double,
+    val type: String, // "income" or "expense"
+    val categoryId: Long?,
+    val accountName: String = "默认账户",
+    val date: Long, // timestamp in millis
+    val note: String = "",
+    val createdAt: Long = System.currentTimeMillis()
+)

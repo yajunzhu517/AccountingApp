@@ -1,1 +1,6 @@
-cGx1Z2lucyB7CiAgICBpZCgiY29tLmFuZHJvaWQuYXBwbGljYXRpb24iKSB2ZXJzaW9uICI4LjIuMCIgYXBwbHkgZmFsc2UKICAgIGlkKCJvcmcuamV0YnJhaW5zLmtvdGxpbi5hbmRyb2lkIikgdmVyc2lvbiAiMS45LjIwIiBhcHBseSBmYWxzZQogICAgaWQoImNvbS5nb29nbGUuZGFnZ2VyLmhpbHQuYW5kcm9pZCIpIHZlcnNpb24gIjIuNDgiIGFwcGx5IGZhbHNlCiAgICBpZCgib3JnLmpldGJyYWlucy5rb3RsaW4ua2FwdCIpIHZlcnNpb24gIjEuOS4yMCIgYXBwbHkgZmFsc2UKfQo=
+plugins {
+    id("com.android.application") version "8.2.0" apply false
+    id("org.jetbrains.kotlin.android") version "1.9.20" apply false
+    id("com.google.dagger.hilt.android") version "2.48" apply false
+    id("org.jetbrains.kotlin.kapt") version "1.9.20" apply false
+}

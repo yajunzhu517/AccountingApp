@@ -1,1 +1,7 @@
-cGFja2FnZSBjb20uZXhhbXBsZS5hY2NvdW50aW5nYXBwCgppbXBvcnQgYW5kcm9pZC5hcHAuQXBwbGljYXRpb24KaW1wb3J0IGRhZ2dlci5oaWx0LmFuZHJvaWQuSGlsdEFuZHJvaWRBcHAKCkBIaWx0QW5kcm9pZEFwcApjbGFzcyBBY2NvdW50aW5nQXBwIDogQXBwbGljYXRpb24oKQo=
+package com.example.accountingapp
+
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
+
+@HiltAndroidApp
+class AccountingApp : Application()

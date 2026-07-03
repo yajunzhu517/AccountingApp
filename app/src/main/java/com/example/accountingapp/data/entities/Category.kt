@@ -1,1 +1,16 @@
-cGFja2FnZSBjb20uZXhhbXBsZS5hY2NvdW50aW5nYXBwLmRhdGEuZW50aXRpZXMKCmltcG9ydCBhbmRyb2lkeC5yb29tLkVudGl0eQppbXBvcnQgYW5kcm9pZHgucm9vbS5QcmltYXJ5S2V5CgpARW50aXR5KHRhYmxlTmFtZSA9ICJjYXRlZ29yaWVzIikKZGF0YSBjbGFzcyBDYXRlZ29yeSgKICAgIEBQcmltYXJ5S2V5KGF1dG9HZW5lcmF0ZSA9IHRydWUpCiAgICB2YWwgaWQ6IExvbmcgPSAwLAogICAgdmFsIG5hbWU6IFN0cmluZywKICAgIHZhbCB0eXBlOiBTdHJpbmcsIC8vICJpbmNvbWUiIG9yICJleHBlbnNlIgogICAgdmFsIGljb246IFN0cmluZywgLy8gbWF0ZXJpYWwgaWNvbiBuYW1lCiAgICB2YWwgY29sb3I6IEludCwgICAvLyBBUkdCIGNvbG9yIGludAogICAgdmFsIHNvcnRPcmRlcjogSW50ID0gMCwKICAgIHZhbCBpc1ByZXNldDogQm9vbGVhbiA9IGZhbHNlCikK
+package com.example.accountingapp.data.entities
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "categories")
+data class Category(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+    val name: String,
+    val type: String, // "income" or "expense"
+    val icon: String, // material icon name
+    val color: Int,   // ARGB color int
+    val sortOrder: Int = 0,
+    val isPreset: Boolean = false
+)

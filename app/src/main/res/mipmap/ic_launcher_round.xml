@@ -1,1 +1,15 @@
-PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHZlY3RvciB4bWxuczphbmRyb2lkPSJodHRwOi8vc2NoZW1hcy5hbmRyb2lkLmNvbS9hcGsvcmVzL2FuZHJvaWQiCiAgICBhbmRyb2lkOndpZHRoPSI0OGRwIgogICAgYW5kcm9pZDpoZWlnaHQ9IjQ4ZHAiCiAgICBhbmRyb2lkOnZpZXdwb3J0V2lkdGg9IjQ4IgogICAgYW5kcm9pZDp2aWV3cG9ydEhlaWdodD0iNDgiPgogICAgPHBhdGgKICAgICAgICBhbmRyb2lkOmZpbGxDb2xvcj0iIzAwNkM0QyIKICAgICAgICBhbmRyb2lkOnBhdGhEYXRhPSJNMCwwaDQ4djQ4aC00OHoiIC8+CiAgICA8cGF0aAogICAgICAgIGFuZHJvaWQ6ZmlsbENvbG9yPSIjRkZGRkZGIgogICAgICAgIGFuZHJvaWQ6cGF0aERhdGE9Ik0yNCwxNCBMMjQsMzQgTTE0LDI0IEwzNCwyNCIKICAgICAgICBhbmRyb2lkOnN0cm9rZUNvbG9yPSIjRkZGRkZGIgogICAgICAgIGFuZHJvaWQ6c3Ryb2tlV2lkdGg9IjMiIC8+CjwvdmVjdG9yPg==
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:fillColor="#006C4C"
+        android:pathData="M0,0h48v48h-48z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,14 L24,34 M14,24 L34,24"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3" />
+</vector>

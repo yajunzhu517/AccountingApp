@@ -1,1 +1,27 @@
-cGFja2FnZSBjb20uZXhhbXBsZS5hY2NvdW50aW5nYXBwLmRhdGEKCmltcG9ydCBhbmRyb2lkeC5yb29tLkRhbwppbXBvcnQgYW5kcm9pZHgucm9vbS5EZWxldGUKaW1wb3J0IGFuZHJvaWR4LnJvb20uSW5zZXJ0CmltcG9ydCBhbmRyb2lkeC5yb29tLlF1ZXJ5CmltcG9ydCBhbmRyb2lkeC5yb29tLlVwZGF0ZQppbXBvcnQgY29tLmV4YW1wbGUuYWNjb3VudGluZ2FwcC5kYXRhLmVudGl0aWVzLkFjY291bnQKaW1wb3J0IGtvdGxpbnguY29yb3V0aW5lcy5mbG93LkZsb3cKCkBEYW8KaW50ZXJmYWNlIEFjY291bnREYW8gewogICAgQFF1ZXJ5KCJTRUxFQ1QgKiBGUk9NIGFjY291bnRzIE9SREVSIEJZIGlkIEFTQyIpCiAgICBmdW4gZ2V0QWxsKCk6IEZsb3c8TGlzdDxBY2NvdW50Pj4KCiAgICBAUXVlcnkoIlNFTEVDVCAqIEZST00gYWNjb3VudHMgV0hFUkUgaWQgPSA6aWQgTElNSVQgMSIpCiAgICBzdXNwZW5kIGZ1biBnZXRCeUlkKGlkOiBMb25nKTogQWNjb3VudD8KCiAgICBAQluamVjdCAKICAgIHN1c3BlbmQgZnVuIGluc2VydChhY2NvdW50OiBBY2NvdW50KTogTG9uZwoKICAgIEBVcGRhdGUKICAgIHN1c3BlbmQgZnVuIHVwZGF0ZShhY2NvdW50OiBBY2NvdW50KQoKICAgIEBEZWxldGUKICAgIHN1c3BlbmQgZnVuIGRlbGV0ZShhY2NvdW50OiBBY2NvdW50KQp9Cg==
+package com.example.accountingapp.data
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.example.accountingapp.data.entities.Account
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface AccountDao {
+    @Query("SELECT * FROM accounts ORDER BY id ASC")
+    fun getAll(): Flow<List<Account>>
+
+    @Query("SELECT * FROM accounts WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Long): Account?
+
+    @Insert
+    suspend fun insert(account: Account): Long
+
+    @Update
+    suspend fun update(account: Account)
+
+    @Delete
+    suspend fun delete(account: Account)
+}

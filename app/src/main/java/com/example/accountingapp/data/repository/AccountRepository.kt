@@ -1,1 +1,22 @@
-cGFja2FnZSBjb20uZXhhbXBsZS5hY2NvdW50aW5nYXBwLmRhdGEucmVwb3NpdG9yeQoKaW1wb3J0IGNvbS5leGFtcGxlLmFjY291bnRpbmdhcHAuZGF0YS5BY2NvdW50RGFvCmltcG9ydCBjb20uZXhhbXBsZS5hY2NvdW50aW5nYXBwLmRhdGEuZW50aXRpZXMuQWNjb3VudAppbXBvcnQga290bGlueC5jb3JvdXRpbmVzLmZsb3cuRmxvdwppbXBvcnQgamF2YXguaW5qZWN0LkluamVjdAppbXBvcnQgamF2YXguaW5qZWN0LlNpbmdsZXRvbgoKQFNpbmdsZXRvbgpjbGFzcyBBY2NvdW50UmVwb3NpdG9yeSBASW5qZWN0IGNvbnN0cnVjdG9yKAogICAgcHJpdmF0ZSB2YWwgYWNjb3VudERhbzogQWNjb3VudERhbwopIHsKICAgIGZ1biBnZXRBbGxBY2NvdW50cygpOiBGbG93PExpc3Q8QWNjb3VudD4+ID0gYWNjb3VudERhby5nZXRBbGwoKQoKICAgIHN1c3BlbmQgZnVuIGdldEFjY291bnRCeUlkKGlkOiBMb25nKTogQWNjb3VudD8gPSBhY2NvdW50RGFvLmdldEJ5SWQoaWQpCgogICAgc3VzcGVuZCBmdW4gaW5zZXJ0QWNjb3VudChhY2NvdW50OiBBY2NvdW50KTogTG9uZyA9IGFjY291bnREYW8uaW5zZXJ0KGFjY291bnQpCgogICAgc3VzcGVuZCBmdW4gdXBkYXRlQWNjb3VudChhY2NvdW50OiBBY2NvdW50KSA9IGFjY291bnREYW8udXBkYXRlKGFjY291bnQpCgogICAgc3VzcGVuZCBmdW4gZGVsZXRlQWNjb3VudChhY2NvdW50OiBBY2NvdW50KSA9IGFjY291bnREYW8uZGVsZXRlKGFjY291bnQpCn0K
+package com.example.accountingapp.data.repository
+
+import com.example.accountingapp.data.AccountDao
+import com.example.accountingapp.data.entities.Account
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class AccountRepository @Inject constructor(
+    private val accountDao: AccountDao
+) {
+    fun getAllAccounts(): Flow<List<Account>> = accountDao.getAll()
+
+    suspend fun getAccountById(id: Long): Account? = accountDao.getById(id)
+
+    suspend fun insertAccount(account: Account): Long = accountDao.insert(account)
+
+    suspend fun updateAccount(account: Account) = accountDao.update(account)
+
+    suspend fun deleteAccount(account: Account) = accountDao.delete(account)
+}

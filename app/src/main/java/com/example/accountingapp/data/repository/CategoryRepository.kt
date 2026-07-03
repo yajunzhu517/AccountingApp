@@ -1,1 +1,26 @@
-cGFja2FnZSBjb20uZXhhbXBsZS5hY2NvdW50aW5nYXBwLmRhdGEucmVwb3NpdG9yeQoKaW1wb3J0IGNvbS5leGFtcGxlLmFjY291bnRpbmdhcHAuZGF0YS5DYXRlZ29yeURhbwppbXBvcnQgY29tLmV4YW1wbGUuYWNjb3VudGluZ2FwcC5kYXRhLmVudGl0aWVzLkNhdGVnb3J5CmltcG9ydCBrb3RsaW54LmNvcm91dGluZXMuZmxvdy5GbG93CmltcG9ydCBqYXZheC5pbmplY3QuSW5qZWN0CmltcG9ydCBqYXZheC5pbmplY3QuU2luZ2xldG9uCgpAU2luZ2xldG9uCmNsYXNzIENhdGVnb3J5UmVwb3NpdG9yeSBASW5qZWN0IGNvbnN0cnVjdG9yKAogICAgcHJpdmF0ZSB2YWwgY2F0ZWdvcnlEYW86IENhdGVnb3J5RGFvCikgewogICAgZnVuIGdldEFsbENhdGVnb3JpZXMoKTogRmxvdzxMaXN0PENhdGVnb3J5Pj4gPSBjYXRlZ29yeURhby5nZXRBbGwoKQoKICAgIGZ1biBnZXRDYXRlZ29yaWVzQnlUeXBlKHR5cGU6IFN0cmluZyk6IEZsb3c8TGlzdDxDYXRlZ29yeT4+ID0gY2F0ZWdvcnlEYW8uZ2V0QnlUeXBlKHR5cGUpCgogICAgc3VzcGVuZCBmdW4gZ2V0Q2F0ZWdvcnlCeUlkKGlkOiBMb25nKTogQ2F0ZWdvcnk/ID0gY2F0ZWdvcnlEYW8uZ2V0QnlJZChpZCkKCiAgICBzdXNwZW5kIGZ1biBpbnNlcnRDYXRlZ29yeShjYXRlZ29yeTogQ2F0ZWdvcnkpOiBMb25nID0gY2F0ZWdvcnlEYW8uaW5zZXJ0KGNhdGVnb3J5KQoKICAgIHN1c3BlbmQgZnVuIHVwZGF0ZUNhdGVnb3J5KGNhdGVnb3J5OiBDYXRlZ29yeSkgPSBjYXRlZ29yeURhby51cGRhdGUoY2F0ZWdvcnkpCgogICAgc3VzcGVuZCBmdW4gZGVsZXRlQ2F0ZWdvcnkoY2F0ZWdvcnk6IENhdGVnb3J5KSA9IGNhdGVnb3J5RGFvLmRlbGV0ZShjYXRlZ29yeSkKCiAgICBzdXNwZW5kIGZ1biBkZWxldGVBbGxDdXN0b21DYXRlZ29yaWVzKCkgPSBjYXRlZ29yeURhby5kZWxldGVBbGxDdXN0b20oKQp9Cg==
+package com.example.accountingapp.data.repository
+
+import com.example.accountingapp.data.CategoryDao
+import com.example.accountingapp.data.entities.Category
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class CategoryRepository @Inject constructor(
+    private val categoryDao: CategoryDao
+) {
+    fun getAllCategories(): Flow<List<Category>> = categoryDao.getAll()
+
+    fun getCategoriesByType(type: String): Flow<List<Category>> = categoryDao.getByType(type)
+
+    suspend fun getCategoryById(id: Long): Category? = categoryDao.getById(id)
+
+    suspend fun insertCategory(category: Category): Long = categoryDao.insert(category)
+
+    suspend fun updateCategory(category: Category) = categoryDao.update(category)
+
+    suspend fun deleteCategory(category: Category) = categoryDao.delete(category)
+
+    suspend fun deleteAllCustomCategories() = categoryDao.deleteAllCustom()
+}

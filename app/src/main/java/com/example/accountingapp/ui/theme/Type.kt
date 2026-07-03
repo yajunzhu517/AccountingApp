@@ -1,1 +1,31 @@
-cGFja2FnZSBjb20uZXhhbXBsZS5hY2NvdW50aW5nYXBwLnVpLnRoZW1lCgppbXBvcnQgYW5kcm9pZHguY29tcG9zZS5tYXRlcmlhbDMuVHlwb2dyYXBoeQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS51aS50ZXh0LlRleHRTdHlsZQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS51aS50ZXh0LmZvbnQuRm9udEZhbWlseQppbXBvcnQgYW5kcm9pZHguY29tcG9zZS51aS50ZXh0LmZvbnQuRm9udFdlaWdodAppbXBvcnQgYW5kcm9pZHguY29tcG9zZS51aS51bml0LnNwCgp2YWwgVHlwb2dyYXBoeSA9IFR5cG9ncmFwaHkoCiAgICBib2R5TGFyZ2UgPSBUZXh0U3R5bGUoCiAgICAgICAgZm9udEZhbWlseSA9IEZvbnRGYW1pbHkuRGVmYXVsdCwKICAgICAgICBmb250V2VpZ2h0ID0gRm9udFdlaWdodC5Ob3JtYWwsCiAgICAgICAgZm9udFNpemUgPSAxNi5zcCwKICAgICAgICBsaW5lSGVpZ2h0ID0gMjQuc3AsCiAgICAgICAgbGV0dGVyU3BhY2luZyA9IDAuNS5zcAogICAgKSwKICAgIHRpdGxlTGFyZ2UgPSBUZXh0U3R5bGUoCiAgICAgICAgZm9udEZhbWlseSA9IEZvbnRGYW1pbHkuRGVmYXVsdCwKICAgICAgICBmb250V2VpZ2h0ID0gRm9udFdlaWdodC5Ob3JtYWwsCiAgICAgICAgZm9udFNpemUgPSAyMi5zcCwKICAgICAgICBsaW5lSGVpZ2h0ID0gMjguc3AsCiAgICAgICAgbGV0dGVyU3BhY2luZyA9IDAuc3AKICAgICksCiAgICBsYWJlbFNtYWxsID0gVGV4dFN0eWxlKAogICAgICAgIGZvbnRGYW1pbHkgPSBGb250RmFtaWx5LkRlZmF1bHQsCiAgICAgICAgZm9udFdlaWdodCA9IEZvbnRXZWlnaHQuTWVkaXVtLAogICAgICAgIGZvbnRTaXplID0gMTEuc3AsCiAgICAgICAgbGluZUhlaWdodCA9IDE2LnNwLAogICAgICAgIGxldHRlclNwYWNpbmcgPSAwLjUuc3AKICAgICkKKQo=
+package com.example.accountingapp.ui.theme
+
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+
+val Typography = Typography(
+    bodyLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 11.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.5.sp
+    )
+)

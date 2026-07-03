@@ -1,1 +1,6 @@
-PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPGZ1bGwtYmFja3VwLWNvbnRlbnQ+CiAgICA8ZXhjbHVkZSBkb21haW49InNoYXJlZHByZWYiIHBhdGg9Ii4iIC8+CiAgICA8ZXhjbHVkZSBkb21haW49ImRhdGFiYXNlIiBwYXRoPSIuIiAvPgogICAgPGV4Y2x1ZGUgZG9tYWluPSJleHRlcm5hbCIgcGF0aD0iLiIgLz4KPC9mdWxsLWJhY2t1cC1jb250ZW50Pgo=
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <exclude domain="sharedpref" path="." />
+    <exclude domain="database" path="." />
+    <exclude domain="external" path="." />
+</full-backup-content>

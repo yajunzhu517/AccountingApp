@@ -1,1 +1,36 @@
-cGFja2FnZSBjb20uZXhhbXBsZS5hY2NvdW50aW5nYXBwLmRhdGEKCmltcG9ydCBhbmRyb2lkeC5yb29tLkRhbwppbXBvcnQgYW5kcm9pZHgucm9vbS5EZWxldGUKaW1wb3J0IGFuZHJvaWR4LnJvb20uSW5zZXJ0CmltcG9ydCBhbmRyb2lkeC5yb29tLlF1ZXJ5CmltcG9ydCBhbmRyb2lkeC5yb29tLlVwZGF0ZQppbXBvcnQgY29tLmV4YW1wbGUuYWNjb3VudGluZ2FwcC5kYXRhLmVudGl0aWVzLkNhdGVnb3J5CmltcG9ydCBrb3RsaW54LmNvcm91dGluZXMuZmxvdy5GbG93CgpARGFvCmludGVyZmFjZSBDYXRlZ29yeURhbyB7CiAgICBAUXVlcnkoIlNFTEVDVCAqIEZST00gY2F0ZWdvcmllcyBPUkRFUiBCWSBzb3J0T3JkZXIgQVNDLCBpZCBBU0MiKQogICAgZnVuIGdldEFsbCgpOiBGbG93PExpc3Q8Q2F0ZWdvcnk+PgoKICAgIEBRdWVyeSgiU0VMRUNUICogRlJPTSBjYXRlZ29yaWVzIFdIRVJFIHR5cGUgPSA6dHlwZSBPUkRFUiBCWSBzb3J0T3JkZXIgQVNDLCBpZCBBU0MiKQogICAgZnVuIGdldEJ5VHlwZSh0eXBlOiBTdHJpbmcpOiBGbG93PExpc3Q8Q2F0ZWdvcnk+PgoKICAgIEBRdWVyeSgiU0VMRUNUICogRlJPTSBjYXRlZ29yaWVzIFdIRVJFIGlkID0gOmlkIExJTUlUIDEiKQogICAgc3VzcGVuZCBmdW4gZ2V0QnlJZChpZDogTG9uZyk6IENhdGVnb3J5PwoKICAgIEBJbnNlcnQKICAgIHN1c3BlbmQgZnVuIGluc2VydChjYXRlZ29yeTogQ2F0ZWdvcnkpOiBMb25nCgogICAgQFVwZGF0ZQogICAgc3VzcGVuZCBmdW4gdXBkYXRlKGNhdGVnb3J5OiBDYXRlZ29yeSkKCiAgICBARGVsZXRlCiAgICBzdXNwZW5kIGZ1biBkZWxldGUoY2F0ZWdvcnk6IENhdGVnb3J5KQoKICAgIEBRdWVyeSgiREVMRVRFIEZST00gY2F0ZWdvcmllcyBXSEVSRSBpc1ByZXNldCA9IDAiKQogICAgc3VzcGVuZCBmdW4gZGVsZXRlQWxsQ3VzdG9tKCkKCiAgICBAUXVlcnkoIlNFTEVDVCBDT1VOVCgqKSBGUk9NIGNhdGVnb3JpZXMiKQogICAgc3VzcGVuZCBmdW4gY291bnQoKTogSW50Cn0K
+package com.example.accountingapp.data
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.example.accountingapp.data.entities.Category
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface CategoryDao {
+    @Query("SELECT * FROM categories ORDER BY sortOrder ASC, id ASC")
+    fun getAll(): Flow<List<Category>>
+
+    @Query("SELECT * FROM categories WHERE type = :type ORDER BY sortOrder ASC, id ASC")
+    fun getByType(type: String): Flow<List<Category>>
+
+    @Query("SELECT * FROM categories WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Long): Category?
+
+    @Insert
+    suspend fun insert(category: Category): Long
+
+    @Update
+    suspend fun update(category: Category)
+
+    @Delete
+    suspend fun delete(category: Category)
+
+    @Query("DELETE FROM categories WHERE isPreset = 0")
+    suspend fun deleteAllCustom()
+
+    @Query("SELECT COUNT(*) FROM categories")
+    suspend fun count(): Int
+}
