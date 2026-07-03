@@ -28,10 +28,30 @@ jobs:
       run: chmod +x gradlew
       
     - name: Build Debug APK
-      run: ./gradlew assembleDebug
+      run: |
+        ./gradlew assembleDebug --stacktrace --info 2>&1 | tee gradle-build.log
+        echo "Build exit code: $?"
+      continue-on-error: true
       
+    - name: Check APK
+      run: |
+        if [ -f app/build/outputs/apk/debug/app-debug.apk ]; then
+          echo "APK found!"
+        else
+          echo "APK not found"
+        fi
+        ls -la app/build/outputs/apk/debug/ 2>/dev/null || true
+        
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: build-log
+        path: gradle-build.log
+        
     - name: Upload APK
       uses: actions/upload-artifact@v4
+      if: success()
       with:
         name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
