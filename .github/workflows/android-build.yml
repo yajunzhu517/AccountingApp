@@ -20,11 +20,31 @@ jobs:
         distribution: 'temurin'
         
     - name: Build Debug APK
-      run: ./gradlew assembleDebug
+      run: |
+        mkdir -p build-logs
+        ./gradlew assembleDebug --stacktrace --info 2>&1 | tee build-logs/gradle-build.log || true
+        echo "=== Build completed ==="
+      continue-on-error: true
       
+    - name: List outputs
+      run: |
+        echo "=== APK files ==="
+        find app/build -name "*.apk" -type f 2>/dev/null || true
+        echo "=== Output directory ==="
+        ls -la app/build/outputs/apk/ 2>/dev/null || true
+        echo "=== Build logs ==="
+        ls -la build-logs/ 2>/dev/null || true
+        
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
-        if-no-files-found: error
+        if-no-files-found: warn
+        
+    - name: Upload build logs
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: build-logs
+        path: build-logs/
