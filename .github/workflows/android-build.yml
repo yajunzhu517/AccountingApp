@@ -20,8 +20,13 @@ jobs:
         distribution: 'temurin'
         
     - name: Build Debug APK
-      run: ./gradlew assembleDebug --stacktrace
-      
+      run: |
+        ./gradlew assembleDebug --stacktrace || true
+        echo "=== Gradle Log ==="
+        cat app/build/outputs/logs/*.log 2>/dev/null || true
+        echo "=== Gradle Daemon Log ==="
+        cat /home/runner/.gradle/daemon/*/daemon-*.out.log 2>/dev/null || true
+        
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
