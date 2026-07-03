@@ -20,15 +20,20 @@ jobs:
         distribution: 'temurin'
         
     - name: Build Debug APK
+      run: ./gradlew assembleDebug
+      
+    - name: List APK files
       run: |
-        ./gradlew assembleDebug --stacktrace || true
-        echo "=== Gradle Log ==="
-        cat app/build/outputs/logs/*.log 2>/dev/null || true
-        echo "=== Gradle Daemon Log ==="
-        cat /home/runner/.gradle/daemon/*/daemon-*.out.log 2>/dev/null || true
+        echo "=== Listing APK files ==="
+        find app/build -name "*.apk" -type f 2>/dev/null || true
+        echo "=== Listing outputs directory ==="
+        ls -la app/build/outputs/apk/ 2>/dev/null || true
+        echo "=== Listing debug directory ==="
+        ls -la app/build/outputs/apk/debug/ 2>/dev/null || true
         
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+        path: app/build/outputs/apk/**/*.apk
+        if-no-files-found: warn
