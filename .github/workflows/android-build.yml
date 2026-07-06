@@ -24,6 +24,17 @@ jobs:
       with:
         cmdline-tools-version: 12.0
         
+    - name: Environment Diagnostics
+      run: |
+        echo "=== Java Version ==="
+        java -version
+        echo "=== ANDROID_HOME ==="
+        echo $ANDROID_HOME
+        echo "=== Listing Android SDK ==="
+        ls -la $ANDROID_HOME 2>/dev/null || true
+        echo "=== Gradle Wrapper Version ==="
+        ./gradlew --version
+        
     - name: Make gradlew executable
       run: chmod +x gradlew
       
