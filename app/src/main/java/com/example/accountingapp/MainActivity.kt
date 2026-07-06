@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             AccountingAppTheme {
-                AccountingApp()
+                AppNavigation()
             }
         }
     }
@@ -70,7 +70,7 @@ val bottomNavItems = listOf(
 )
 
 @Composable
-fun AccountingApp() {
+fun AppNavigation() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route

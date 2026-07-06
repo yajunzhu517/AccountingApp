@@ -104,6 +104,8 @@ fun RecordScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
+    val dateFormatter = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) }
+
     if (transactionId != null && uiState.editingId == null) {
         viewModel.loadTransaction(transactionId)
     }
