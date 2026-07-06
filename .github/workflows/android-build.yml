@@ -51,6 +51,14 @@ jobs:
         echo "Build exit code: $BUILD_EXIT_CODE"
       continue-on-error: true
       
+    - name: Output build errors to GitHub log
+      if: steps.build.outputs.build_exit_code != '0'
+      run: |
+        echo "::error::Build failed! Showing last 100 lines of gradle log:"
+        tail -100 gradle-build.log | while read line; do echo "::error::$line"; done
+        echo "::error::Searching for specific error patterns..."
+        grep -i "error\|exception\|failed\|cannot" gradle-build.log | tail -20 | while read line; do echo "::error::$line"; done
+      
     - name: Find and list APK files
       run: |
         echo "=== Searching for APK files ==="
@@ -61,8 +69,6 @@ jobs:
         ls -la app/build/outputs/apk/ 2>/dev/null || true
         echo "=== Listing debug directory ==="
         ls -la app/build/outputs/apk/debug/ 2>/dev/null || true
-        echo "=== Gradle build log tail (last 100 lines) ==="
-        tail -100 gradle-build.log 2>/dev/null || true
       
     - name: Upload build log
       uses: actions/upload-artifact@v4
