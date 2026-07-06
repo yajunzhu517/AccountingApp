@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     
     steps:
     - name: Checkout code
@@ -47,6 +49,27 @@ jobs:
         echo "ERROR SUMMARY"
         echo "========================================"
         grep -E "ERROR|error:|Exception|FAILED|Cannot|cannot|fatal" gradle-build.log | tail -30
+      
+    - name: Post build log to GitHub Issue
+      if: steps.build.outputs.build_exit_code != '0'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const logContent = fs.readFileSync('gradle-build.log', 'utf8');
+          const lastLines = logContent.split('\n').slice(-200).join('\n');
+          const errorLines = logContent.split('\n').filter(line => 
+            /ERROR|error:|Exception|FAILED|Cannot|cannot|fatal/i.test(line)
+          ).slice(-30).join('\n');
+          
+          const body = `## Build Failed ❌\n\n**Run:** ${context.runId}\n**Job:** ${context.job}\n\n### Last 200 Lines of Build Log\n\n\`\`\`\n${lastLines}\n\`\`\`\n\n### Error Summary\n\n\`\`\`\n${errorLines}\n\`\`\`\n`;
+          
+          github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: 1,
+            body: body
+          });
       
     - name: Find and list APK files
       run: |
