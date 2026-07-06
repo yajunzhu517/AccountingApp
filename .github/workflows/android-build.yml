@@ -28,7 +28,13 @@ jobs:
       run: chmod +x gradlew
       
     - name: Build Debug APK
-      run: ./gradlew assembleDebug --stacktrace
+      id: build
+      run: |
+        ./gradlew assembleDebug --stacktrace --info 2>&1 | tee gradle-build.log
+        BUILD_EXIT_CODE=${PIPESTATUS[0]}
+        echo "build_exit_code=$BUILD_EXIT_CODE" >> $GITHUB_OUTPUT
+        echo "Build exit code: $BUILD_EXIT_CODE"
+      continue-on-error: true
       
     - name: Find and list APK files
       run: |
@@ -40,10 +46,26 @@ jobs:
         ls -la app/build/outputs/apk/ 2>/dev/null || true
         echo "=== Listing debug directory ==="
         ls -la app/build/outputs/apk/debug/ 2>/dev/null || true
+        echo "=== Gradle build log tail (last 100 lines) ==="
+        tail -100 gradle-build.log 2>/dev/null || true
+      
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: build-log
+        path: gradle-build.log
         
     - name: Upload APK
       uses: actions/upload-artifact@v4
+      if: steps.build.outputs.build_exit_code == '0'
       with:
         name: app-debug
         path: app/build/outputs/apk/**/*.apk
         if-no-files-found: error
+        
+    - name: Fail if build failed
+      if: steps.build.outputs.build_exit_code != '0'
+      run: |
+        echo "Build failed with exit code ${{ steps.build.outputs.build_exit_code }}"
+        exit 1
