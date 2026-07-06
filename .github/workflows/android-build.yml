@@ -24,28 +24,28 @@ jobs:
       with:
         cmdline-tools-version: 12.0
         
-    - name: Environment Diagnostics
-      run: |
-        echo "=== Java Version ==="
-        java -version || true
-        echo "=== ANDROID_HOME ==="
-        echo "$ANDROID_HOME" || true
-        echo "=== Gradle Wrapper Version ==="
-        ./gradlew --version || true
-        echo "=== Project files ==="
-        ls -la
-      
     - name: Make gradlew executable
       run: chmod +x gradlew
       
-    - name: Build Debug APK
+    - name: Build Debug APK with Build Scan
       id: build
       run: |
-        ./gradlew assembleDebug --stacktrace --info 2>&1 | tee gradle-build.log
+        ./gradlew assembleDebug --scan 2>&1 | tee gradle-build.log
         BUILD_EXIT_CODE=${PIPESTATUS[0]}
         echo "build_exit_code=$BUILD_EXIT_CODE" >> $GITHUB_OUTPUT
         echo "Build exit code: $BUILD_EXIT_CODE"
+        # Extract build scan URL if present
+        grep -oP 'https://gradle.com/s/\w+' gradle-build.log | tail -1 > build-scan-url.txt || true
+        if [ -s build-scan-url.txt ]; then
+          echo "build_scan_url=$(cat build-scan-url.txt)" >> $GITHUB_OUTPUT
+        fi
       continue-on-error: true
+      
+    - name: Output Build Scan URL
+      if: steps.build.outputs.build_scan_url != ''
+      run: |
+        echo "## Gradle Build Scan 🔍" >> $GITHUB_STEP_SUMMARY
+        echo "Build Scan URL: ${{ steps.build.outputs.build_scan_url }}" >> $GITHUB_STEP_SUMMARY
       
     - name: Output build summary
       if: steps.build.outputs.build_exit_code != '0'
@@ -56,28 +56,11 @@ jobs:
         echo '```' >> $GITHUB_STEP_SUMMARY
         tail -100 gradle-build.log >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Error Patterns" >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        grep -i "error\|exception\|failed\|cannot" gradle-build.log | tail -20 >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
       
-    - name: Output success summary
-      if: steps.build.outputs.build_exit_code == '0'
-      run: |
-        echo "## Build Success ✅" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "APK generated successfully!" >> $GITHUB_STEP_SUMMARY
-        
     - name: Find and list APK files
       run: |
         echo "=== Searching for APK files ==="
         find app/build -name "*.apk" -type f 2>/dev/null || true
-        echo "=== Listing outputs directory ==="
-        ls -la app/build/outputs/ 2>/dev/null || true
-        echo "=== Listing apk directory ==="
-        ls -la app/build/outputs/apk/ 2>/dev/null || true
-        echo "=== Listing debug directory ==="
         ls -la app/build/outputs/apk/debug/ 2>/dev/null || true
       
     - name: Upload build log
