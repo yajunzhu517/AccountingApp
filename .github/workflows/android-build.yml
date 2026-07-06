@@ -27,35 +27,26 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x gradlew
       
-    - name: Build Debug APK with Build Scan
+    - name: Build Debug APK
       id: build
       run: |
-        ./gradlew assembleDebug --scan 2>&1 | tee gradle-build.log
+        ./gradlew assembleDebug --stacktrace --info 2>&1 | tee gradle-build.log
         BUILD_EXIT_CODE=${PIPESTATUS[0]}
         echo "build_exit_code=$BUILD_EXIT_CODE" >> $GITHUB_OUTPUT
         echo "Build exit code: $BUILD_EXIT_CODE"
-        # Extract build scan URL if present
-        grep -oP 'https://gradle.com/s/\w+' gradle-build.log | tail -1 > build-scan-url.txt || true
-        if [ -s build-scan-url.txt ]; then
-          echo "build_scan_url=$(cat build-scan-url.txt)" >> $GITHUB_OUTPUT
-        fi
       continue-on-error: true
       
-    - name: Output Build Scan URL
-      if: steps.build.outputs.build_scan_url != ''
-      run: |
-        echo "## Gradle Build Scan 🔍" >> $GITHUB_STEP_SUMMARY
-        echo "Build Scan URL: ${{ steps.build.outputs.build_scan_url }}" >> $GITHUB_STEP_SUMMARY
-      
-    - name: Output build summary
+    - name: Output build log to GitHub Actions log
       if: steps.build.outputs.build_exit_code != '0'
       run: |
-        echo "## Build Failed ❌" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Gradle Build Log (last 100 lines)" >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        tail -100 gradle-build.log >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
+        echo "========================================"
+        echo "BUILD FAILED - LAST 150 LINES OF LOG"
+        echo "========================================"
+        tail -150 gradle-build.log
+        echo "========================================"
+        echo "ERROR SUMMARY"
+        echo "========================================"
+        grep -E "ERROR|error:|Exception|FAILED|Cannot|cannot|fatal" gradle-build.log | tail -30
       
     - name: Find and list APK files
       run: |
