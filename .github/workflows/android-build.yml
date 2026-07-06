@@ -27,14 +27,18 @@ jobs:
     - name: Environment Diagnostics
       run: |
         echo "=== Java Version ==="
-        java -version
+        java -version || true
         echo "=== ANDROID_HOME ==="
-        echo $ANDROID_HOME
+        echo "$ANDROID_HOME" || true
         echo "=== Listing Android SDK ==="
-        ls -la $ANDROID_HOME 2>/dev/null || true
+        ls -la "$ANDROID_HOME" 2>/dev/null || true
         echo "=== Gradle Wrapper Version ==="
-        ./gradlew --version
-        
+        ./gradlew --version || true
+        echo "=== Listing files in project root ==="
+        ls -la
+        echo "=== Checking gradlew permissions ==="
+        ls -la gradlew
+      
     - name: Make gradlew executable
       run: chmod +x gradlew
       
