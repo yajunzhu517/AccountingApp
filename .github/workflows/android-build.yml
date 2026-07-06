@@ -32,23 +32,11 @@ jobs:
     - name: Build Debug APK
       id: build
       run: |
-        ./gradlew assembleDebug --stacktrace --info 2>&1 | tee gradle-build.log
+        ./gradlew assembleDebug --stacktrace --info --console=plain 2>&1 | tee gradle-build.log
         BUILD_EXIT_CODE=${PIPESTATUS[0]}
         echo "build_exit_code=$BUILD_EXIT_CODE" >> $GITHUB_OUTPUT
         echo "Build exit code: $BUILD_EXIT_CODE"
       continue-on-error: true
-      
-    - name: Output build log to GitHub Actions log
-      if: steps.build.outputs.build_exit_code != '0'
-      run: |
-        echo "========================================"
-        echo "BUILD FAILED - LAST 150 LINES OF LOG"
-        echo "========================================"
-        tail -150 gradle-build.log
-        echo "========================================"
-        echo "ERROR SUMMARY"
-        echo "========================================"
-        grep -E "ERROR|error:|Exception|FAILED|Cannot|cannot|fatal" gradle-build.log | tail -30
       
     - name: Post build log to GitHub Issue
       if: steps.build.outputs.build_exit_code != '0'
@@ -57,12 +45,26 @@ jobs:
         script: |
           const fs = require('fs');
           const logContent = fs.readFileSync('gradle-build.log', 'utf8');
-          const lastLines = logContent.split('\n').slice(-200).join('\n');
-          const errorLines = logContent.split('\n').filter(line => 
-            /ERROR|error:|Exception|FAILED|Cannot|cannot|fatal/i.test(line)
-          ).slice(-30).join('\n');
+          // Extract Kotlin compilation errors specifically
+          const lines = logContent.split('\n');
+          const kotlinErrors = [];
+          let captureError = false;
+          for (const line of lines) {
+            if (line.includes('e:') || line.includes('w:') || line.includes('error:') || line.includes('CompilationErrorException')) {
+              captureError = true;
+              kotlinErrors.push(line);
+            } else if (captureError && (line.startsWith('\t') || line.startsWith(' ') || line.includes('at '))) {
+              kotlinErrors.push(line);
+            } else if (captureError && line.includes('BUILD FAILED')) {
+              kotlinErrors.push(line);
+              break;
+            }
+          }
           
-          const body = `## Build Failed ❌\n\n**Run:** ${context.runId}\n**Job:** ${context.job}\n\n### Last 200 Lines of Build Log\n\n\`\`\`\n${lastLines}\n\`\`\`\n\n### Error Summary\n\n\`\`\`\n${errorLines}\n\`\`\`\n`;
+          const lastLines = lines.slice(-100).join('\n');
+          const errorSection = kotlinErrors.length > 0 ? kotlinErrors.join('\n') : lastLines;
+          
+          const body = `## Build Failed ❌ (Run ${context.runId})\n\n### Kotlin Compilation Errors\n\n\`\`\`\n${errorSection}\n\`\`\`\n\n### Last 100 Lines\n\n\`\`\`\n${lastLines}\n\`\`\`\n`;
           
           github.rest.issues.createComment({
             owner: context.repo.owner,
