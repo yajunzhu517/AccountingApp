@@ -30,14 +30,10 @@ jobs:
         java -version || true
         echo "=== ANDROID_HOME ==="
         echo "$ANDROID_HOME" || true
-        echo "=== Listing Android SDK ==="
-        ls -la "$ANDROID_HOME" 2>/dev/null || true
         echo "=== Gradle Wrapper Version ==="
         ./gradlew --version || true
-        echo "=== Listing files in project root ==="
+        echo "=== Project files ==="
         ls -la
-        echo "=== Checking gradlew permissions ==="
-        ls -la gradlew
       
     - name: Make gradlew executable
       run: chmod +x gradlew
@@ -51,14 +47,28 @@ jobs:
         echo "Build exit code: $BUILD_EXIT_CODE"
       continue-on-error: true
       
-    - name: Output build errors to GitHub log
+    - name: Output build summary
       if: steps.build.outputs.build_exit_code != '0'
       run: |
-        echo "::error::Build failed! Showing last 100 lines of gradle log:"
-        tail -100 gradle-build.log | while read line; do echo "::error::$line"; done
-        echo "::error::Searching for specific error patterns..."
-        grep -i "error\|exception\|failed\|cannot" gradle-build.log | tail -20 | while read line; do echo "::error::$line"; done
+        echo "## Build Failed ❌" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Gradle Build Log (last 100 lines)" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        tail -100 gradle-build.log >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Error Patterns" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        grep -i "error\|exception\|failed\|cannot" gradle-build.log | tail -20 >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
       
+    - name: Output success summary
+      if: steps.build.outputs.build_exit_code == '0'
+      run: |
+        echo "## Build Success ✅" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "APK generated successfully!" >> $GITHUB_STEP_SUMMARY
+        
     - name: Find and list APK files
       run: |
         echo "=== Searching for APK files ==="
