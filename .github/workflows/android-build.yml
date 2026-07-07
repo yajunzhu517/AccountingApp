@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      issues: write
+      contents: write
     
     steps:
     - name: Checkout code
@@ -29,66 +29,22 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x gradlew
       
-    - name: Run Kotlin Compile Only
-      id: compile
-      run: |
-        ./gradlew :app:compileDebugKotlin --info --console=plain 2>&1 | tee kotlin-compile.log
-        BUILD_EXIT_CODE=${PIPESTATUS[0]}
-        echo "build_exit_code=$BUILD_EXIT_CODE" >> $GITHUB_OUTPUT
-        echo "Build exit code: $BUILD_EXIT_CODE"
-      continue-on-error: true
-      
-    - name: Extract Kotlin errors
-      run: |
-        echo "=== Searching for Kotlin errors (e: lines) ==="
-        grep -n "^e:" kotlin-compile.log || true
-        echo "=== Searching for 'error:' lines ==="
-        grep -n "error:" kotlin-compile.log || true
-        echo "=== Searching for 'FAILED' lines ==="
-        grep -n "FAILED" kotlin-compile.log || true
-        echo "=== Last 50 lines ==="
-        tail -50 kotlin-compile.log
-      
-    - name: Post build log to GitHub Issue
-      if: steps.compile.outputs.build_exit_code != '0'
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const fs = require('fs');
-          const logContent = fs.readFileSync('kotlin-compile.log', 'utf8');
-          const lines = logContent.split('\n');
-          
-          // Extract Kotlin errors specifically
-          const kotlinErrors = lines.filter(line => 
-            line.startsWith('e:') || line.includes('error:') || line.includes('FAILED')
-          );
-          
-          const lastLines = lines.slice(-50).join('\n');
-          const errorSection = kotlinErrors.length > 0 ? kotlinErrors.join('\n') : lastLines;
-          
-          const body = `## Kotlin Compile Failed ❌ (Run ${context.runId})\n\n### Kotlin Errors\n\n\`\`\`\n${errorSection}\n\`\`\`\n\n### Last 50 Lines\n\n\`\`\`\n${lastLines}\n\`\`\`\n`;
-          
-          github.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: 1,
-            body: body
-          });
-      
-    - name: Build full APK if compile succeeded
-      if: steps.compile.outputs.build_exit_code == '0'
+    - name: Build Debug APK
       run: ./gradlew assembleDebug
       
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      if: steps.compile.outputs.build_exit_code == '0'
-      with:
-        name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
-        if-no-files-found: error
-        
-    - name: Fail if compile failed
-      if: steps.compile.outputs.build_exit_code != '0'
+    - name: Find APK file
       run: |
-        echo "Kotlin compilation failed with exit code ${{ steps.compile.outputs.build_exit_code }}"
-        exit 1
+        echo "APK file location:"
+        find app/build -name "*.apk" -type f
+        ls -la app/build/outputs/apk/debug/
+      
+    - name: Upload APK to GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v1.0.0-debug
+        name: "Debug Build v1.0.0"
+        body: "Automated debug build of AccountingApp"
+        files: app/build/outputs/apk/debug/app-debug.apk
+        overwrite: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
