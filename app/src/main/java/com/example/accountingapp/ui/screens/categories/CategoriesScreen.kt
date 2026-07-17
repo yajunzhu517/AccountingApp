@@ -15,22 +15,29 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -63,16 +70,29 @@ fun CategoriesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("分类管理") },
+                title = {
+                    Text(
+                        "分类管理",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "返回")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { showAddDialog = true }) {
+            FloatingActionButton(
+                onClick = { showAddDialog = true },
+                containerColor = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(16.dp)
+            ) {
                 Icon(Icons.Filled.Add, contentDescription = "添加分类")
             }
         }
@@ -81,40 +101,45 @@ fun CategoriesScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .background(MaterialTheme.colorScheme.background)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp)
         ) {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Expense categories
             Text(
                 "支出分类",
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(16.dp)
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(vertical = 12.dp)
             )
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp)
-            ) {
-                items(uiState.categories.filter { it.type == "expense" }) { category ->
-                    CategoryItem(
-                        category = category,
-                        onDelete = { categoryToDelete = category }
-                    )
-                }
+            uiState.categories.filter { it.type == "expense" }.forEach { category ->
+                ModernCategoryItem(
+                    category = category,
+                    onDelete = { categoryToDelete = category }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
+            // Income categories
             Text(
                 "收入分类",
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(16.dp)
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(vertical = 12.dp)
             )
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp)
-            ) {
-                items(uiState.categories.filter { it.type == "income" }) { category ->
-                    CategoryItem(
-                        category = category,
-                        onDelete = { categoryToDelete = category }
-                    )
-                }
+            uiState.categories.filter { it.type == "income" }.forEach { category ->
+                ModernCategoryItem(
+                    category = category,
+                    onDelete = { categoryToDelete = category }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
             }
+
+            Spacer(modifier = Modifier.height(80.dp))
         }
     }
 
@@ -151,45 +176,58 @@ fun CategoriesScreen(
 }
 
 @Composable
-fun CategoryItem(
+fun ModernCategoryItem(
     category: Category,
     onDelete: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable { },
-        verticalAlignment = Alignment.CenterVertically
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(Color(category.color)),
-            contentAlignment = Alignment.Center
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            val icon = iconMap[category.icon] ?: iconMap["MoreHoriz"]!!
-            Icon(
-                imageVector = icon,
-                contentDescription = category.name,
-                tint = Color.White,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = category.name,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.weight(1f)
-        )
-        if (!category.isPreset) {
-            IconButton(onClick = onDelete) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(category.color)),
+                contentAlignment = Alignment.Center
+            ) {
+                val icon = iconMap[category.icon] ?: iconMap["MoreHoriz"]!!
                 Icon(
-                    Icons.Filled.Delete,
-                    contentDescription = "删除",
-                    tint = MaterialTheme.colorScheme.error
+                    imageVector = icon,
+                    contentDescription = category.name,
+                    tint = Color.White,
+                    modifier = Modifier.size(22.dp)
                 )
+            }
+            Spacer(modifier = Modifier.width(14.dp))
+            Text(
+                text = category.name,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.weight(1f)
+            )
+            if (!category.isPreset) {
+                IconButton(
+                    onClick = onDelete,
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        Icons.Filled.Delete,
+                        contentDescription = "删除",
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
             }
         }
     }
@@ -220,27 +258,43 @@ fun AddCategoryDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("添加分类") },
+        title = {
+            Text(
+                "添加分类",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+        },
         text = {
             Column {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
                     label = { Text("分类名称") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
-                Text("类型", style = MaterialTheme.typography.bodyMedium)
+                Text("类型", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
                 Row {
                     TextButton(onClick = { type = "expense" }) {
-                        Text("支出", color = if (type == "expense") MaterialTheme.colorScheme.primary else Color.Gray)
+                        Text(
+                            "支出",
+                            color = if (type == "expense") MaterialTheme.colorScheme.primary else Color.Gray,
+                            fontWeight = if (type == "expense") FontWeight.SemiBold else FontWeight.Normal
+                        )
                     }
                     TextButton(onClick = { type = "income" }) {
-                        Text("收入", color = if (type == "income") MaterialTheme.colorScheme.primary else Color.Gray)
+                        Text(
+                            "收入",
+                            color = if (type == "income") MaterialTheme.colorScheme.primary else Color.Gray,
+                            fontWeight = if (type == "income") FontWeight.SemiBold else FontWeight.Normal
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
-                Text("颜色", style = MaterialTheme.typography.bodyMedium)
+                Text("颜色", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -248,10 +302,15 @@ fun AddCategoryDialog(
                     colors.take(6).forEach { color ->
                         Box(
                             modifier = Modifier
-                                .size(32.dp)
+                                .size(36.dp)
                                 .clip(CircleShape)
                                 .background(Color(color))
                                 .clickable { selectedColor = color }
+                                .then(
+                                    if (selectedColor == color)
+                                        Modifier.padding(2.dp)
+                                    else Modifier
+                                )
                         )
                     }
                 }
@@ -266,7 +325,7 @@ fun AddCategoryDialog(
                 },
                 enabled = name.isNotBlank()
             ) {
-                Text("添加")
+                Text("添加", fontWeight = FontWeight.SemiBold)
             }
         },
         dismissButton = {
