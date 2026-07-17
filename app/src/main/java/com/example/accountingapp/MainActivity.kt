@@ -122,7 +122,7 @@ fun AppNavigation() {
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = MaterialTheme.colorScheme.primary,
                                 selectedTextColor = MaterialTheme.colorScheme.primary,
-                                selectedIndicatorColor = MaterialTheme.colorScheme.primaryContainer
+                                indicatorColor = MaterialTheme.colorScheme.primaryContainer
                             )
                         )
                     }
