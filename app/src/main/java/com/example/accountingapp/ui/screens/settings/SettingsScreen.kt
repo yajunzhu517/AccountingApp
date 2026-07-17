@@ -14,13 +14,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Brightness4
 import androidx.compose.material.icons.filled.Fingerprint
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.NavigateNext
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,7 +40,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.accountingapp.ui.theme.GradientStart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,13 +109,13 @@ fun SettingsScreen(
             // Preferences section
             SettingsSectionTitle("偏好")
             ModernSettingItem(
-                icon = Icons.Filled.DarkMode,
+                icon = Icons.Filled.Brightness4,
                 title = "深色模式",
                 description = "跟随系统或手动切换",
                 hasSwitch = true
             )
             ModernSettingItem(
-                icon = Icons.Filled.Category,
+                icon = Icons.Filled.Folder,
                 title = "分类管理",
                 description = "管理收支分类",
                 onClick = { navController.navigate("categories") }
@@ -215,7 +214,7 @@ fun ModernSettingItem(
                 )
             } else if (onClick != null) {
                 Icon(
-                    imageVector = Icons.Filled.ChevronRight,
+                    imageVector = Icons.Filled.NavigateNext,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                 )
