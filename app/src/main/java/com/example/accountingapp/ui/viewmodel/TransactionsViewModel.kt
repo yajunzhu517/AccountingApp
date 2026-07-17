@@ -28,7 +28,13 @@ class TransactionsViewModel @Inject constructor(
     fun loadAll() {
         transactionRepository.getAllTransactions()
             .onEach { transactions ->
-                _uiState.value = _uiState.value.copy(transactions = transactions)
+                val income = transactions.filter { it.type == "income" }.sumOf { it.amount }
+                val expense = transactions.filter { it.type == "expense" }.sumOf { it.amount }
+                _uiState.value = _uiState.value.copy(
+                    transactions = transactions,
+                    totalIncome = income,
+                    totalExpense = expense
+                )
             }
             .launchIn(viewModelScope)
     }
@@ -40,7 +46,13 @@ class TransactionsViewModel @Inject constructor(
         }
         transactionRepository.getTransactionsByType(type)
             .onEach { transactions ->
-                _uiState.value = _uiState.value.copy(transactions = transactions)
+                val income = transactions.filter { it.type == "income" }.sumOf { it.amount }
+                val expense = transactions.filter { it.type == "expense" }.sumOf { it.amount }
+                _uiState.value = _uiState.value.copy(
+                    transactions = transactions,
+                    totalIncome = income,
+                    totalExpense = expense
+                )
             }
             .launchIn(viewModelScope)
     }
@@ -52,7 +64,13 @@ class TransactionsViewModel @Inject constructor(
         }
         transactionRepository.searchTransactions(query)
             .onEach { transactions ->
-                _uiState.value = _uiState.value.copy(transactions = transactions)
+                val income = transactions.filter { it.type == "income" }.sumOf { it.amount }
+                val expense = transactions.filter { it.type == "expense" }.sumOf { it.amount }
+                _uiState.value = _uiState.value.copy(
+                    transactions = transactions,
+                    totalIncome = income,
+                    totalExpense = expense
+                )
             }
             .launchIn(viewModelScope)
     }
@@ -65,5 +83,7 @@ class TransactionsViewModel @Inject constructor(
 }
 
 data class TransactionsUiState(
-    val transactions: List<Transaction> = emptyList()
+    val transactions: List<Transaction> = emptyList(),
+    val totalIncome: Double = 0.0,
+    val totalExpense: Double = 0.0
 )
