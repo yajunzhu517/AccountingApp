@@ -26,7 +26,6 @@ import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -53,8 +52,6 @@ import com.example.accountingapp.ui.theme.GradientEnd
 import com.example.accountingapp.ui.theme.GradientStart
 import com.example.accountingapp.ui.theme.IncomeColor
 import com.example.accountingapp.ui.theme.IncomeColorLight
-import com.example.accountingapp.ui.theme.expenseColor
-import com.example.accountingapp.ui.theme.incomeColor
 import com.example.accountingapp.ui.viewmodel.HomeViewModel
 
 @Composable
