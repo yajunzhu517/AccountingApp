@@ -56,8 +56,6 @@ import com.example.accountingapp.ui.theme.GradientEnd
 import com.example.accountingapp.ui.theme.GradientStart
 import com.example.accountingapp.ui.theme.IncomeColor
 import com.example.accountingapp.ui.theme.IncomeColorLight
-import com.example.accountingapp.ui.theme.expenseColor
-import com.example.accountingapp.ui.theme.incomeColor
 import com.example.accountingapp.ui.viewmodel.StatisticsViewModel
 import kotlin.math.min
 
