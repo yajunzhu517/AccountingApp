@@ -59,8 +59,6 @@ import androidx.navigation.NavController
 import com.example.accountingapp.data.entities.Transaction
 import com.example.accountingapp.ui.theme.ExpenseColor
 import com.example.accountingapp.ui.theme.IncomeColor
-import com.example.accountingapp.ui.theme.expenseColor
-import com.example.accountingapp.ui.theme.incomeColor
 import com.example.accountingapp.ui.viewmodel.TransactionsViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
