@@ -99,7 +99,7 @@ fun StatisticsScreen(
                     modifier = Modifier.padding(horizontal = 20.dp),
                     containerColor = MaterialTheme.colorScheme.background,
                     indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
+                        TabRowDefaults.SecondaryIndicator(
                             Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
                             height = 3.dp,
                             color = MaterialTheme.colorScheme.primary
